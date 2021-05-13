@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './components/body.dart';
 import './components/sideNav.dart';
@@ -21,11 +22,17 @@ class HomeScreen extends StatelessWidget {
             },
           )),
       drawer: SafeArea(
-        child: Drawer(
-          child: SideNav(),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
+          child: Drawer(
+            child: SideNav(),
+          ),
         ),
       ),
-      body: HomeBody(),
+      body: SingleChildScrollView(
+        child: HomeBody(),
+      ),
     );
   }
 }

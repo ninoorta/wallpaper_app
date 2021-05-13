@@ -5,9 +5,9 @@ import 'package:wallpaper_app/constants.dart';
 
 import 'custom_divider.dart';
 import 'top_sidenav_content.dart';
+import 'footer_copyright.dart';
 
 class SideNav extends StatelessWidget {
-  const SideNav({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,60 +63,21 @@ class SideNav extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                height: 60.0,
-                padding: EdgeInsets.symmetric(vertical: 2.0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Copyright @2021, All Rights Reserved",
-                        style: TextStyle(color: Colors.white, fontSize: 15.0),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        textBaseline: TextBaseline.alphabetic,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        children: [
-                          Text(
-                            "Developed by",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15.0),
-                          ),
-                          Text(
-                            "Gemmob",
-                            style: kCopyrightTextStyle,
-                          )
-                        ],
-                      ),
-                    ]),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.25),
-                ),
-              ),
-            ],
-          ),
-        ),
+        FooterCopyright(),
       ],
     );
   }
 }
+
 
 class Category extends StatelessWidget {
   final String svgIconLink;
   final String categoryName;
   final String categoryRoute;
 
-  Category(
-      {@required this.svgIconLink,
-      @required this.categoryName,
-      @required this.categoryRoute});
+  Category({@required this.svgIconLink,
+    @required this.categoryName,
+    @required this.categoryRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +90,7 @@ class Category extends StatelessWidget {
         child: Row(
           children: <Widget>[
             IconButton(
-              icon: SvgPicture.asset(svgIconLink),
+              icon: SvgPicture.asset(svgIconLink, width: 32.0, height: 32.0, ),
             ),
             Text(
               categoryName,
