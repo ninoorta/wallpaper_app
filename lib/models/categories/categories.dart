@@ -1,33 +1,53 @@
 import 'package:flutter/material.dart';
 
 class Categories {
-
-  static final  _categories = <CategoryModel>[
-     CategoryModel(svgIconURL: "assets/icons/category_icons/4k.svg", categoryName: "Ultra HD", categoryRoute: "ultraHD"),
-     CategoryModel(svgIconURL: "assets/icons/category_icons/new.svg", categoryName: "New", categoryRoute: "new"),
-     CategoryModel(svgIconURL: "assets/icons/category_icons/animals.svg", categoryName: "Animals", categoryRoute: "animals"),
-     CategoryModel(svgIconURL: "assets/icons/category_icons/space.svg", categoryName: "Space", categoryRoute: "space"),
-     CategoryModel(svgIconURL: "assets/icons/category_icons/nature.svg", categoryName: "Nature", categoryRoute: "nature"),
-     CategoryModel(svgIconURL: "assets/icons/category_icons/sports.svg", categoryName: "Sports", categoryRoute: "sports"),
+  static final _categoriesIcon = <CategoryIconModel>[
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/4k.svg",
+        categoryName: "Ultra HD",
+        categoryRoute: "ultraHD"),
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/new.svg",
+        categoryName: "New",
+        categoryRoute: "new"),
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/animals.svg",
+        categoryName: "Animals",
+        categoryRoute: "animals"),
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/space.svg",
+        categoryName: "Space",
+        categoryRoute: "space"),
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/nature.svg",
+        categoryName: "Nature",
+        categoryRoute: "nature"),
+    CategoryIconModel(
+        svgIconURL: "assets/icons/category_icons/sports.svg",
+        categoryName: "Sports",
+        categoryRoute: "sports"),
   ];
-  
-  
-  
-  List<CategoryModel> getAllCategories(){
-    return Categories._categories.map((category) => category).toList();
+
+  List<CategoryIconModel> getAllCategoriesIcon() {
+    return Categories._categoriesIcon.map((category) => category).toList();
   }
-  
-  
-  // fetch categories data when have API
+
+// fetch categories data when have API
 }
 
-class CategoryModel {
+class CategoryIconModel {
   final String svgIconURL;
   final String categoryName;
   final String categoryRoute;
 
-  CategoryModel(
+  CategoryIconModel(
       {@required this.svgIconURL,
       @required this.categoryName,
       @required this.categoryRoute});
 }
+
+// class CategoryModel extends CategoryIconModel {
+//   final String category
+//
+//   CategoryModel(@required);
+// }

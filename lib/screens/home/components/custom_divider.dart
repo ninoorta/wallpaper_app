@@ -1,4 +1,3 @@
-import 'package:wallpaper_app/constants.dart';
 import 'package:flutter/material.dart';
 
 

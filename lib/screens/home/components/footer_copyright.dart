@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper_app/constants.dart';
+import 'package:wallpaper_app/utilities/constants.dart';
 
 class FooterCopyright extends StatelessWidget {
   const FooterCopyright({

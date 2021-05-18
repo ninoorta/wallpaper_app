@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpaper_app/constants.dart';
-import './screens/home/home_screen.dart';
+import 'package:wallpaper_app/utilities/constants.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/category_detail/category_detail_screen.dart';
+import 'screens/image_detail/image_detail_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,8 +23,12 @@ class MyApp extends StatelessWidget {
         // ),
         // visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-
-      home: HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/category': (context) => CategoryDetail(),
+        '/image': (context) => ImageDetail(),                   // need to custom with id
+      },
     );
   }
 }

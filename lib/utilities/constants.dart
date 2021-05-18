@@ -30,3 +30,9 @@ const kCopyrightTextStyle = TextStyle(
   fontSize: 15.0,
   fontFamily: "Pacifico-Regular",
 );
+
+const kDialogTextButtonStyle = TextStyle(
+  color: Colors.blue,
+  fontSize: 16.0,
+  fontWeight: FontWeight.bold
+);

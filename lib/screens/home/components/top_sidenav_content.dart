@@ -1,5 +1,5 @@
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpaper_app/constants.dart';
+import 'package:wallpaper_app/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
 
