@@ -31,8 +31,7 @@ class FooterCopyright extends StatelessWidget {
                     children: [
                       Text(
                         "Developed by",
-                        style:
-                        TextStyle(color: Colors.white, fontSize: 15.0),
+                        style: TextStyle(color: Colors.white, fontSize: 15.0),
                       ),
                       Text(
                         "Gemmob",

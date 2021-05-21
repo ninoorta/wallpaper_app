@@ -36,10 +36,13 @@ dependencies:
 
   permission_handler: ^4.2.0+hotfix.3
   dio: ^4.0.0
+  http: ^0.13.3
 
   wallpaper_manager: "^1.0.10"
   flutter_cache_manager: ^3.0.2
   top_snackbar_flutter: ^1.0.0
+
+  flutter_spinkit: "^4.1.2"
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +65,7 @@ flutter:
      - assets/images/images_webp/
      - assets/icons/
      - assets/icons/category_icons/
+     - assets/icons/account/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

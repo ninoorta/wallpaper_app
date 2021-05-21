@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +9,35 @@ import 'custom_divider.dart';
 import 'top_sidenav_content.dart';
 import 'footer_copyright.dart';
 
-class SideNav extends StatelessWidget {
+import 'package:wallpaper_app/models/categories/categories.dart';
+
+import 'package:wallpaper_app/services/categoryService.dart';
+
+class SideNav extends StatefulWidget {
+  List<dynamic> categoryData;
+
+  SideNav({this.categoryData});
+
+  @override
+  _SideNavState createState() => _SideNavState();
+}
+
+class _SideNavState extends State<SideNav> {
+  List<dynamic> _categoryData;
+
   @override
   Widget build(BuildContext context) {
+    _categoryData = widget.categoryData;
+
+    // if(categoryData){
+    //   print("have data $categoryData");
+    //   test = test.fromJson(categoryData);
+    //   print("first ${test[0].icon}");
+    // }
+    // print("sidenav category data: $categoryData");
+    // print("data JSON $categoryDataJSON");
+
+    // print("sideNav ${widget.categoryData}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -29,36 +57,35 @@ class SideNav extends StatelessWidget {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/new.svg",
-                    categoryName: "New",
-                    categoryRoute: "new",
-                  ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/4k.svg",
-                    categoryName: "Ultra HD",
-                    categoryRoute: "ultraHD",
-                  ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/animals.svg",
-                    categoryName: "Animals",
-                    categoryRoute: "animals",
-                  ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/nature.svg",
-                    categoryName: "Nature",
-                    categoryRoute: "nature",
-                  ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/sports.svg",
-                    categoryName: "Sports",
-                    categoryRoute: "sports",
-                  ),
-                  Category(
-                    svgIconLink: "assets/icons/category_icons/space.svg",
-                    categoryName: "Space",
-                    categoryRoute: "space",
-                  ),
+                  Column(
+                    children: [
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _categoryData.length,
+                          itemBuilder: (context, index) {
+                            if (index == _categoryData.length - 1) {
+                              return Column(
+                                children: [
+                                  CategoryItem(
+                                      svgIconLink: _categoryData[index]["icon"],
+                                      categoryName: _categoryData[index]
+                                          ["name"],
+                                      categoryRouteID: _categoryData[index]
+                                          ["id"]),
+                                 SizedBox(height: 5.0,),
+                                ],
+                              );
+                            } else {
+                              return CategoryItem(
+                                  svgIconLink: _categoryData[index]["icon"],
+                                  categoryName: _categoryData[index]["name"],
+                                  categoryRouteID: _categoryData[index]["id"]);
+                            }
+                          }),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -70,33 +97,43 @@ class SideNav extends StatelessWidget {
   }
 }
 
-class Category extends StatelessWidget {
+class CategoryItem extends StatelessWidget {
   final String svgIconLink;
   final String categoryName;
-  final String categoryRoute;
+  final int categoryRouteID;
 
-  Category(
+  CategoryItem(
       {@required this.svgIconLink,
       @required this.categoryName,
-      @required this.categoryRoute});
+      @required this.categoryRouteID});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0),
       child: GestureDetector(
-        onTap: () {
-          print('click icon category with route: $categoryRoute');
+        onTap: () async {
+          print('click icon category with route: $categoryRouteID');
+
+          var imagesData = await CategoryService.getChosenCategoryData(this.categoryRouteID, 1);
+          // get data first
+
+          print("in sideNav $imagesData");
+          Navigator.pushNamed(context, "/category", arguments: {
+            "categoryID": this.categoryRouteID,
+            "pageNumber": 1,
+            "categoryName": this.categoryName,
+            "data": imagesData
+          });
         },
         child: Row(
           children: <Widget>[
             IconButton(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.fromLTRB(0, 5.0, 5.0, 5.0),
+              padding: EdgeInsets.fromLTRB(0, 0, 15.0, 0),
               iconSize: 40,
-              // padding: EdgeInsets.zero,
-              icon: SvgPicture.asset(
-                svgIconLink,
+              icon: SvgPicture.network(
+                "https://mkt.h2c.us/wall/icon/$svgIconLink",
                 // width: 40.0,
                 // height: 40.0,
               ),

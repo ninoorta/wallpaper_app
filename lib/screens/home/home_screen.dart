@@ -1,32 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallpaper_app/models/categories/categories.dart';
 import './components/body.dart';
 import './components/sideNav.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
+  final categoryData;
+
+  HomeScreen({this.categoryData});
+
+
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  // void printData(){
+  //   print("category catch in home screen ${this.categoryData}");
+  //
+  // }
+  Map dataInArguments = { };
+  List categoryData = [];
+
   @override
   Widget build(BuildContext context) {
+    dataInArguments = ModalRoute.of(context).settings.arguments;
+    categoryData = dataInArguments["categoryData"];
+
+    // print('data in home screen: $dataInArguments');
+    print('categoryData in homeScreen $categoryData');
     return Scaffold(
       appBar: AppBar(
-          elevation: 0,
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/menu.svg",
-                  color: Colors.black,
+        elevation: 0,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/menu.svg",
+                color: Colors.black,
+                width: 23,
+                height: 18,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, "/account");
+                },
+                child: SvgPicture.asset(
+                  "assets/icons/account/aboutUs.svg",
+                  width: 30,
+                  height: 30,
                 ),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              );
-            },
-          )),
+              ),
+            )
+          ],
+        ),
+      ),
       drawer: SafeArea(
         child: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
           child: Drawer(
-            child: SideNav(),
+            child: SideNav(categoryData: categoryData,),
           ),
         ),
       ),
