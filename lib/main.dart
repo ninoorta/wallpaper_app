@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper_app/screens/loading/loading_screen.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 // screens
 import 'screens/home/home_screen.dart';
@@ -11,13 +12,11 @@ import 'screens/about/about_screen.dart';
 // services
 import 'services/networking.dart';
 
-
 // model
 import './models/categories/categories.dart';
 
-void main() async  {
+void main() async {
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/image': (context) => ImageDetail(), // need to custom with id
         '/account': (context) => About(),
       },
+      builder: EasyLoading.init(),
     );
   }
 }

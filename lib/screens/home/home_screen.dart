@@ -38,10 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
     categoryData = dataInArguments["categoryData"];
 
     // print('data in home screen: $dataInArguments');
-    print('categoryData in homeScreen $categoryData');
+    // print('categoryData in homeScreen $categoryData');
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.grey[50],
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(

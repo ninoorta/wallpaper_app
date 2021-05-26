@@ -48,11 +48,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // print("before await test");
     // final data = await CategoryService.getCategoryData();
 
-    var data = await CategoryService.getCategoryData();
+    var categoryData = await CategoryService.getCategoryData();
     // print('in loading screen ${data}');
 
+    // debugPrint("categoryData in debug $categoryData", wrapWidth: 1024);
+
     Navigator.pushReplacementNamed(context, '/home', arguments: {
-      'categoryData': data
+      'categoryData': categoryData
     });
 
   }
@@ -60,7 +62,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[500].withOpacity(0.25),
+      backgroundColor: Colors.black,
       body: Center(
         child: SpinKitCircle(
           color: Colors.white,

@@ -20,95 +20,97 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         actions: <Widget>[
-          Row(
-            children: <Widget>[
-              ElevatedButton(
-                child: Text(
-                  'Home screen',
-                  style: kDialogTextButtonStyle,
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                ElevatedButton(
+                  child: Text(
+                    'Home screen',
+                    style: kDialogTextButtonStyle,
+                  ),
+                  onPressed: () async {
+                    print("User chose home screen");
+
+                    // String url = imgURL;
+                    // String assetPath = imgURL;
+                    int location = WallpaperManager.HOME_SCREEN;
+                    var file =
+                        await DefaultCacheManager().getSingleFile(imgURL);
+                    final String result =
+                        await WallpaperManager.setWallpaperFromFile(
+                            file.path, location);
+                    // final String result =
+                    //     await WallpaperManager.setWallpaperFromAsset(
+                    //         url, location);
+                    print('set wallpaper result $result');
+
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      textStyle: kDialogTextButtonStyle,
+                      elevation: 2),
                 ),
-                onPressed: () async {
-                  print("User chose home screen");
+                ElevatedButton(
+                  child: Text(
+                    'Lock screen',
+                    style: kDialogTextButtonStyle,
+                  ),
+                  onPressed: () async {
+                    print("User chose lock screen");
 
+                    // String assetPath = imgURL;
+                    int location = WallpaperManager.LOCK_SCREEN;
+                    var file =
+                        await DefaultCacheManager().getSingleFile(imgURL);
+                    final String result =
+                        await WallpaperManager.setWallpaperFromFile(
+                            file.path, location);
+                    // final String result =
+                    //     await WallpaperManager.setWallpaperFromAsset(
+                    //         assetPath, location);
+                    print('set wallpaper result $result');
 
-                  // String url = imgURL;
-                  // String assetPath = imgURL;
-                  int location = WallpaperManager.HOME_SCREEN;
-                  var file = await DefaultCacheManager().getSingleFile(imgURL);
-                  final String result =
-                      await WallpaperManager.setWallpaperFromFile(
-                          file.path, location);
-                  // final String result =
-                  //     await WallpaperManager.setWallpaperFromAsset(
-                  //         url, location);
-                  print('set wallpaper result $result');
-
-                  Navigator.of(context).pop();
-
-
-                },
-                style: ElevatedButton.styleFrom(
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
                     primary: Colors.white,
                     textStyle: kDialogTextButtonStyle,
-                    elevation: 0),
-              ),
-              ElevatedButton(
-                child: Text(
-                  'Lock screen',
-                  style: kDialogTextButtonStyle,
+                    elevation: 2,
+                  ),
                 ),
-                onPressed: () async {
-                  print("User chose lock screen");
+                ElevatedButton(
+                  child: Text(
+                    'Both',
+                    style: kDialogTextButtonStyle,
+                  ),
+                  onPressed: () async {
+                    print("User chose both screens");
 
-                  // String assetPath = imgURL;
-                  int location = WallpaperManager.LOCK_SCREEN;
-                  var file = await DefaultCacheManager().getSingleFile(imgURL);
-                  final String result =
-                      await WallpaperManager.setWallpaperFromFile(
-                          file.path, location);
-                  // final String result =
-                  //     await WallpaperManager.setWallpaperFromAsset(
-                  //         assetPath, location);
-                  print('set wallpaper result $result');
+                    // String assetPath = imgURL;
+                    int location = WallpaperManager.BOTH_SCREENS;
+                    // final String result =
+                    //     await WallpaperManager.setWallpaperFromAsset(
+                    //         assetPath, location);
+                    var file =
+                        await DefaultCacheManager().getSingleFile(imgURL);
+                    final String result =
+                        await WallpaperManager.setWallpaperFromFile(
+                            file.path, location);
+                    print('set wallpaper result $result');
 
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  textStyle: kDialogTextButtonStyle,
-                  elevation: 0,
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      textStyle: kDialogTextButtonStyle,
+                      elevation: 2),
                 ),
-              ),
-              ElevatedButton(
-                child: Text(
-                  'Both',
-                  style: kDialogTextButtonStyle,
-                ),
-                onPressed: () async {
-                  print("User chose both screens");
-
-                  // String assetPath = imgURL;
-                  int location = WallpaperManager.BOTH_SCREENS;
-                  // final String result =
-                  //     await WallpaperManager.setWallpaperFromAsset(
-                  //         assetPath, location);
-                  var file = await DefaultCacheManager().getSingleFile(imgURL);
-                  final String result =
-                      await WallpaperManager.setWallpaperFromFile(
-                          file.path, location);
-                  print('set wallpaper result $result');
-
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    textStyle: kDialogTextButtonStyle,
-                    elevation: 0),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
-        // actionsPadding: EdgeInsets.symmetric(horizontal: 15.0),
         elevation: 24.0,
       );
     },

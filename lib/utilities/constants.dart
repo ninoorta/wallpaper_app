@@ -10,7 +10,7 @@ const kPaddingAll = EdgeInsets.all(15.0);
 const kLabelTextStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
-  fontSize: 30.0
+  fontSize: 25.0
 );
 
 const kSecondaryLabelTextStyle = TextStyle(
