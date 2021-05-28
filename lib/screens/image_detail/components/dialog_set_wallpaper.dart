@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
 import 'package:wallpaper_manager/wallpaper_manager.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
+import '../image_detail_screen.dart';
 
 Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
   return showDialog<void>(
@@ -20,7 +23,8 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         actions: <Widget>[
-          SizedBox(
+          Container(
+            padding: EdgeInsets.only(bottom: 10.0),
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
@@ -43,9 +47,18 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
                     // final String result =
                     //     await WallpaperManager.setWallpaperFromAsset(
                     //         url, location);
-                    print('set wallpaper result $result');
+                    print('set wallpaper home screen result: $result');
+
 
                     Navigator.of(context).pop();
+
+                    showTopSnackBar(
+                        context,
+                        MySnackBarSuccess(
+                          messageText: "Set homescreen successfully!",
+                        ),
+                        displayDuration: Duration(milliseconds: 1000));
+
                   },
                   style: ElevatedButton.styleFrom(
                       primary: Colors.white,
@@ -70,9 +83,16 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
                     // final String result =
                     //     await WallpaperManager.setWallpaperFromAsset(
                     //         assetPath, location);
-                    print('set wallpaper result $result');
+                    print('set wallpaper lock screen result: $result');
 
                     Navigator.of(context).pop();
+
+                    showTopSnackBar(
+                        context,
+                        MySnackBarSuccess(
+                          messageText: "Set lockscreen successfully!",
+                        ),
+                        displayDuration: Duration(milliseconds: 1000));
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.white,
@@ -80,33 +100,47 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
                     elevation: 2,
                   ),
                 ),
-                ElevatedButton(
-                  child: Text(
-                    'Both',
-                    style: kDialogTextButtonStyle,
-                  ),
-                  onPressed: () async {
-                    print("User chose both screens");
 
-                    // String assetPath = imgURL;
-                    int location = WallpaperManager.BOTH_SCREENS;
-                    // final String result =
-                    //     await WallpaperManager.setWallpaperFromAsset(
-                    //         assetPath, location);
-                    var file =
-                        await DefaultCacheManager().getSingleFile(imgURL);
-                    final String result =
-                        await WallpaperManager.setWallpaperFromFile(
-                            file.path, location);
-                    print('set wallpaper result $result');
+                // later : now can only good apply for home screen, lockscreen can not set
+                // ElevatedButton(
+                //   child: Text(
+                //     'Both',
+                //     style: kDialogTextButtonStyle,
+                //   ),
+                //   onPressed: () async {
+                //     print("User chose both screens");
+                //
+                //     // String assetPath = imgURL;
+                //     int location = WallpaperManager.BOTH_SCREENS;
+                //     // final String result =
+                //     //     await WallpaperManager.setWallpaperFromAsset(
+                //     //         assetPath, location);
+                //     var file =
+                //         await DefaultCacheManager().getSingleFile(imgURL);
+                //
+                //     final String result =
+                //         await WallpaperManager.setWallpaperFromFile(
+                //             file.path, location);
+                //
+                //     print('set wallpaper both  result: $result');
+                //
+                //
+                //     Navigator.of(context).pop();
+                //
+                //     showTopSnackBar(
+                //         context,
+                //         MySnackBarSuccess(
+                //           messageText: "Set both screens successfully!",
+                //         ),
+                //         displayDuration: Duration(milliseconds: 1000));
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //       primary: Colors.white,
+                //       textStyle: kDialogTextButtonStyle,
+                //       elevation: 2),
+                // ),
+                // later
 
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      textStyle: kDialogTextButtonStyle,
-                      elevation: 2),
-                ),
               ],
             ),
           ),

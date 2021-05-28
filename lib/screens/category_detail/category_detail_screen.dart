@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
 
-import 'package:wallpaper_app/models/images/images.dart';
-
 import 'package:wallpaper_app/services/categoryService.dart';
 
 // components
@@ -34,18 +32,24 @@ class _CategoryDetailState extends State<CategoryDetail> {
         EasyLoading.show(status: "Loading...");
 
         currentPage = currentPage + 1;
-        var newData = await CategoryService.loadMoreCategoryData(
-            currentCategoryID, currentPage, 10);
+        try {
+          var newData = await CategoryService.loadMoreCategoryData(
+              currentCategoryID, currentPage, 6);
 
-        print("new data $newData");
-        print("current page $currentPage");
+          // print("new data $newData");
+          // print("current page $currentPage");
 
-        setState(() {
-          _imagesInCategory = _imagesInCategory + newData;
-          // print("new images data $_imagesInCategory");
-          print("current length ${_imagesInCategory.length}");
-          first = false;
-        });
+          setState(() {
+            _imagesInCategory = _imagesInCategory + newData;
+            // print("new images data $_imagesInCategory");
+            // print("current length ${_imagesInCategory.length}");
+            first = false;
+          });
+        } catch (err) {
+          print("error when loadMoreCategoryData: $err");
+          EasyLoading.dismiss();
+          EasyLoading.showToast("Please try again");
+        }
       }
     });
   }
@@ -60,7 +64,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   void getImagesInThisCategory() async {
     _imagesInCategory = await CategoryService.getChosenCategoryData(
         dataInArguments["categoryID"], dataInArguments["pageNumber"]);
-    print("images data in this category $_imagesInCategory");
+    // print("images data in this category $_imagesInCategory");
   }
 
   Map dataInArguments = {};
@@ -78,9 +82,11 @@ class _CategoryDetailState extends State<CategoryDetail> {
       currentPage = dataInArguments["pageNumber"];
       _imagesInCategory = dataInArguments["data"];
     }
-    debugPrint("\n images in category detail screen $_imagesInCategory",
-        wrapWidth: 1024);
-    print("images length ${_imagesInCategory.length}");
+
+    // debugPrint("\n images in category detail screen $_imagesInCategory",
+    //     wrapWidth: 1024);
+    // print("images length ${_imagesInCategory.length}");
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -113,29 +119,15 @@ class _CategoryDetailState extends State<CategoryDetail> {
               itemCount: _imagesInCategory.length,
               itemBuilder: (BuildContext context, int index) {
                 return GridViewItem(
-                    imageID: _imagesInCategory[index]["id"],
-                    imageURL: _imagesInCategory[index]["url"],
-                    imageData: _imagesInCategory[index],
-                    imagesInCategory: _imagesInCategory,
-                    currentIndex: index);
+                  imageID: _imagesInCategory[index]["id"],
+                  imageURL: _imagesInCategory[index]["url"],
+                  imageData: _imagesInCategory[index],
+                  imagesInCategory: _imagesInCategory,
+                  currentIndex: index,
+                  currentCategoryID: currentCategoryID,
+                );
               }),
-        )
-
-        // body: GridView.count(
-        //   controller: _scrollController,
-        //   padding: EdgeInsets.symmetric(horizontal: 15.0),
-        //   crossAxisCount: 2,
-        //   childAspectRatio: 0.65,
-        //   physics: AlwaysScrollableScrollPhysics(),
-        //   children: _imagesInCategory.map((image) {
-        //     return GridViewItem(
-        //       imageID: image["id"],
-        //       imageURL: image["url"],
-        //       imageData: image,
-        //     );
-        //   }).toList(),
-        // ),
-        );
+        ));
   }
 }
 
@@ -145,13 +137,15 @@ class GridViewItem extends StatelessWidget {
   final Map imageData;
   final List imagesInCategory;
   final int currentIndex;
+  final int currentCategoryID;
 
   GridViewItem(
       {this.imageID,
       this.imageURL,
       this.imageData,
       this.imagesInCategory,
-      this.currentIndex});
+      this.currentIndex,
+      this.currentCategoryID});
 
   @override
   Widget build(BuildContext context) {
@@ -160,13 +154,14 @@ class GridViewItem extends StatelessWidget {
       // margin: EdgeInsets.all(10.0),
       margin: EdgeInsets.fromLTRB(5.0, 0, 5.0, 10.0),
       child: GestureDetector(
-        onTap: () async {
+        onTap: () {
           print('user clicked image in category detail');
           // EasyLoading.show(maskType: EasyLoadingMaskType.black, dismissOnTap: false, status: "In a second...");
-          await Navigator.pushNamed(context, '/image', arguments: {
+          Navigator.pushNamed(context, '/image', arguments: {
             "chosenImageData": this.imageData,
             "imagesInCategory": imagesInCategory,
-            "currentIndex": currentIndex
+            "currentIndex": currentIndex,
+            "currentCategoryID": currentCategoryID
           });
           // EasyLoading.dismiss();
         },

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
 
 import 'custom_divider.dart';
@@ -29,23 +28,11 @@ class _SideNavState extends State<SideNav> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    // getCategoryData();
-  }
-
-  Future getCategoryData() async {
-    _categoryData = await CategoryService.getCategoryData();
-    haveData = true;
-    print("start get in sidenav ");
-
-    return _categoryData;
+    _categoryData = widget.categoryData;
   }
 
   @override
   Widget build(BuildContext context) {
-    // _categoryData = widget.categoryData;
-    print("receive data");
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -67,65 +54,98 @@ class _SideNavState extends State<SideNav> {
                   ),
                   Column(
                     children: [
-                      FutureBuilder(
-                        future: getCategoryData(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              height: 400,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          } else {
-                            if (snapshot.hasError) {
-                              return Container(
-                                child: Center(
-                                  child: Text(
-                                    'Error: ${snapshot.error}',
-                                    style: TextStyle(color: Colors.red),
+                      // FutureBuilder(
+                      //   future: getCategoryData(),
+                      //   builder:
+                      //       (BuildContext context, AsyncSnapshot snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return Container(
+                      //         height: 400,
+                      //         child: Center(
+                      //           child: CircularProgressIndicator(),
+                      //         ),
+                      //       );
+                      //     } else {
+                      //       if (snapshot.hasError) {
+                      //         return Container(
+                      //           child: Center(
+                      //             child: Text(
+                      //               'Error: ${snapshot.error}',
+                      //               style: TextStyle(color: Colors.red),
+                      //             ),
+                      //           ),
+                      //         );
+                      //       } else {
+                      //         return ListView.builder(
+                      //             physics: NeverScrollableScrollPhysics(),
+                      //             scrollDirection: Axis.vertical,
+                      //             shrinkWrap: true,
+                      //             itemCount: _categoryData.length,
+                      //             itemBuilder: (context, index) {
+                      //               if (index == _categoryData.length - 1) {
+                      //                 return Column(
+                      //                   children: [
+                      //                     CategoryItem(
+                      //                       iconLink: _categoryData[index]
+                      //                           ["thumb"],
+                      //                       categoryName: _categoryData[index]
+                      //                           ["name"],
+                      //                       categoryRouteID:
+                      //                           _categoryData[index]["id"],
+                      //                     ),
+                      //                     SizedBox(
+                      //                       height: 5.0,
+                      //                     ),
+                      //                   ],
+                      //                 );
+                      //               } else {
+                      //                 return CategoryItem(
+                      //                     iconLink: _categoryData[index]
+                      //                         ["thumb"],
+                      //                     categoryName: _categoryData[index]
+                      //                         ["name"],
+                      //                     categoryRouteID: _categoryData[index]
+                      //                         ["id"]);
+                      //               }
+                      //             });
+                      //       }
+                      //     }
+                      //   },
+                      // ),
+                      // Container(
+                      //     height: 400,
+                      //     child: Center(
+                      //       child: CircularProgressIndicator(),
+                      //     )),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _categoryData.length,
+                          itemBuilder: (context, index) {
+                            if (index == _categoryData.length - 1) {
+                              return Column(
+                                children: [
+                                  CategoryItem(
+                                    iconLink: _categoryData[index]["icon"],
+                                    categoryName: _categoryData[index]["name"],
+                                    categoryRouteID: _categoryData[index]["id"],
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                ],
                               );
                             } else {
-                              return ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: _categoryData.length,
-                                  itemBuilder: (context, index) {
-                                    if (index == _categoryData.length - 1) {
-                                      return Column(
-                                        children: [
-                                          CategoryItem(
-                                            iconLink: _categoryData[index]
-                                                ["thumb"],
-                                            categoryName: _categoryData[index]
-                                                ["name"],
-                                            categoryRouteID:
-                                                _categoryData[index]["id"],
-                                          ),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      return CategoryItem(
-                                          iconLink: _categoryData[index]
-                                              ["thumb"],
-                                          categoryName: _categoryData[index]
-                                              ["name"],
-                                          categoryRouteID: _categoryData[index]
-                                              ["id"]);
-                                    }
-                                  });
+                              return CategoryItem(
+                                iconLink: _categoryData[index]["icon"],
+                                categoryName: _categoryData[index]["name"],
+                                categoryRouteID: _categoryData[index]["id"],
+                                imagesData: _categoryData[index]["wallpaper"],
+                              );
                             }
-                          }
-                        },
-                      ),
+                          })
                     ],
                   )
                 ],
@@ -143,12 +163,13 @@ class CategoryItem extends StatelessWidget {
   final String iconLink;
   final String categoryName;
   final int categoryRouteID;
+  final List<dynamic> imagesData;
 
-  CategoryItem({
-    @required this.iconLink,
-    @required this.categoryName,
-    @required this.categoryRouteID,
-  });
+  CategoryItem(
+      {@required this.iconLink,
+      @required this.categoryName,
+      @required this.categoryRouteID,
+      @required this.imagesData});
 
   @override
   Widget build(BuildContext context) {
@@ -159,48 +180,24 @@ class CategoryItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          // MaterialButton(
-          //   padding: EdgeInsets.zero,
-          //   onPressed: () => null,
-          //   child: CachedNetworkImage(
-          //     width: 40.0,
-          //     height: 40.0,
-          //     imageBuilder: (context, imageProvider) {
-          //       return SvgPicture.network(
-          //           "https://mkt.h2c.us/wall/icon/$svgIconLink");
-          //     },
-          //   ),
-          // ),
-          // IconButton(
-          //   alignment: Alignment.centerLeft,
-          //   padding: EdgeInsets.fromLTRB(0, 0, 15.0, 0),
-          //   iconSize: 40,
-          //   // icon: SvgPicture.network(
-          //   //   "https://mkt.h2c.us/wall/icon/$svgIconLink",
-          //   // ),
-          //   icon: Image.asset("assets/icons/category_icons/10.png"),
-          //   // icon: SvgPicture.asset(
-          //   //   "assets/icons/category_icons/nature.svg",
-          //   // ),
-          // ),
           MaterialButton(
             padding: EdgeInsets.zero,
             onPressed: () async {
-              // EasyLoadingStatus.show();
-
-              EasyLoading.show(status: "Moving...", dismissOnTap: false);
-
-              var data = await CategoryService.getChosenCategoryData(
-                  categoryRouteID, 1);
-
-              EasyLoading.dismiss();
-
+              // EasyLoading.show(status: "Moving...", dismissOnTap: false);
+              //
+              // var data = await CategoryService.getChosenCategoryData(
+              //     categoryRouteID, 1);
+              //
+              // EasyLoading.dismiss();
+              print("click move to $categoryRouteID \n $imagesData");
+              //
               Navigator.popAndPushNamed(context, "/category", arguments: {
                 "categoryID": categoryRouteID,
                 "pageNumber": 1,
                 "categoryName": categoryName,
-                "data": data
+                "data": imagesData
               });
+
             },
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -211,7 +208,7 @@ class CategoryItem extends StatelessWidget {
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     key: UniqueKey(),
-                    imageUrl: "https://mkt.h2c.us/wall/category/$iconLink",
+                    imageUrl: "https://mkt.h2c.us/wall/icon/$iconLink",
                   ),
                 ),
                 SizedBox(

@@ -25,13 +25,15 @@ class SearchBar extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: TextField(
+                  enabled: false,
                   decoration: InputDecoration(
-                    hintText: 'Find Wallpaper...',
+                    hintText: 'Find Wallpaper...(coming soon)',
                     hintStyle: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none
                   ),
                   onChanged: (valueChanged) {
                     print(valueChanged);

@@ -31,11 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
   Map dataInArguments = { };
   List categoryData = [];
+  List categoryDataWithoutWalpaper;
 
   @override
   Widget build(BuildContext context) {
     dataInArguments = ModalRoute.of(context).settings.arguments;
     categoryData = dataInArguments["categoryData"];
+
+    // categoryDataWithoutWalpaper = categoryData.map((category) {
+    //   category.remove("wallpaper");
+    // }).toList();
 
     // print('data in home screen: $dataInArguments');
     // print('categoryData in homeScreen $categoryData');
@@ -49,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: SvgPicture.asset(
                 "assets/icons/menu.svg",
                 color: Colors.black,
-                width: 23,
-                height: 18,
+                width: 30,
+                height: 20,
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
             );
@@ -84,7 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: HomeBody(),
+        child: HomeBody(
+          categoryData: categoryData,
+        ),
       ),
     );
   }

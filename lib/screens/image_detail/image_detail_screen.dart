@@ -35,6 +35,9 @@ class ImageDetail extends StatefulWidget {
 class _ImageDetailState extends State<ImageDetail> {
   Map arguments = {};
   Map imageData = {};
+  List<dynamic> imagesInCategory;
+  int initialImageID;
+  int initialImageIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -45,35 +48,125 @@ class _ImageDetailState extends State<ImageDetail> {
     print("arguments in imageDetail screen $arguments");
 
     imageData = arguments["chosenImageData"];
+    imagesInCategory = arguments["imagesInCategory"];
+    initialImageID = imageData["id"];
+    initialImageIndex = arguments["currentIndex"];
+
+    print("chosen image data $imageData");
+
+    final PageController _controller = PageController(
+        initialPage: initialImageIndex, keepPage: true, viewportFraction: 1);
+
     return SafeArea(
       child: Scaffold(
-          body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.transparent,
-                // valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // default
-              ),
+          body: Listener(
+        onPointerMove: (moveEvent) {
+          if (moveEvent.delta.dx > 0) {
+            print("swipe right");
+            Navigator.pop(context);
+          }
+        },
+        child: BuildImageDetail(
+          size: size,
+          imageData: imageData,
+        ),
+      )
+
+          // later
+          //     body: PageView(
+          //         controller: _controller,
+          //         scrollDirection: Axis.horizontal,
+          //         onPageChanged: (index) {
+          //           print("changed to $index");
+          //         },
+          //         children: [
+          //           Row(
+          //             children: [
+          //               Container(
+          //                 width: size.width,
+          //                 child: ListView.builder(
+          //                   controller: ScrollController(
+          //                   ),
+          //                   scrollDirection: Axis.horizontal,
+          //                   shrinkWrap: true,
+          //                   // physics: NeverScrollableScrollPhysics(),
+          //                   itemCount: imagesInCategory.length,
+          //                   itemBuilder: (context, index) {
+          //                     return BuildImageDetail(
+          //                         size: size, imageData: imagesInCategory[index]);
+          //                   },
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          // ])
+
+          // later
+
+          ),
+
+      // child: PageView(
+      //     scrollDirection: Axis.horizontal,
+      //     controller: _controller,
+      //     children: <Widget>[
+      //       ListView.builder(
+      //         itemCount: imagesInCategory.length,
+      //         itemBuilder: (context, index) {
+      //           return BuildImageDetail(size: size, imageData: imagesInCategory[index]);
+      //         },
+      //       ),
+      //     ]),
+    );
+  }
+}
+
+class BuildImageDetail extends StatelessWidget {
+  const BuildImageDetail({
+    Key key,
+    @required this.size,
+    @required this.imageData,
+  }) : super(key: key);
+
+  final Size size;
+  final Map imageData;
+
+  @override
+  Widget build(BuildContext context) {
+    print("device width ${size.width}");
+    print("device height ${size.height}");
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: size.height,
+          width: size.width,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.transparent,
+              // valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // default
             ),
           ),
-          Container(
-            width: size.width,
-            height: size.height,
-            child: FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: "https://mkt.h2c.us/wall/photo/${imageData["url"]}",
-              fit: BoxFit.cover,
-            ),
+        ),
+        Container(
+          width: size.width,
+          height: size.height,
+          child: FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: "https://mkt.h2c.us/wall/photo/${imageData["url"]}",
+            fit: BoxFit.cover,
           ),
-          Column(
+        ),
+        Container(
+          width: size.width,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              // container for back button
               Container(
+                width: size.width,
                 margin: EdgeInsets.all(15.0),
                 alignment: Alignment.topLeft,
                 child: Container(
@@ -95,28 +188,31 @@ class _ImageDetailState extends State<ImageDetail> {
                     iconURL: Icons.info_outline_rounded,
                     iconText: "Info",
                     actionIndex: 0,
+                    imgData: imageData,
                   ),
                   ImageDetailButton(
-                    iconURL: Icons.save_alt_rounded,
-                    iconText: "Save",
-                    actionIndex: 1,
-                  ),
+                      iconURL: Icons.save_alt_rounded,
+                      iconText: "Save",
+                      actionIndex: 1,
+                      imgURL:
+                          "https://mkt.h2c.us/wall/photo/${imageData["url"]}"),
                   ImageDetailButton(
-                    iconURL: Icons.brush_rounded,
-                    iconText: "Apply",
-                    actionIndex: 2,
-                  ),
-                  ImageDetailButton(
-                    iconURL: Icons.favorite_border_rounded,
-                    iconText: "Favorite",
-                    actionIndex: 3,
-                  ),
+                      iconURL: Icons.brush_rounded,
+                      iconText: "Apply",
+                      actionIndex: 2,
+                      imgURL:
+                          "https://mkt.h2c.us/wall/photo/${imageData["url"]}"),
+                  // ImageDetailButton( later feature
+                  //   iconURL: Icons.favorite_border_rounded,
+                  //   iconText: "Favorite",
+                  //   actionIndex: 3,
+                  // ),
                 ],
               ),
             ],
           ),
-        ],
-      )),
+        ),
+      ],
     );
   }
 }
@@ -124,13 +220,16 @@ class _ImageDetailState extends State<ImageDetail> {
 class ImageDetailButton extends StatefulWidget {
   IconData iconURL;
   final String iconText;
-
   final int actionIndex;
+  final String imgURL;
+  final imgData;
 
   ImageDetailButton(
       {@required this.iconURL,
       @required this.iconText,
-      @required this.actionIndex});
+      @required this.actionIndex,
+      this.imgURL,
+      this.imgData});
 
   void newFunc(input) {
     if (input == "Favorite") {
@@ -182,7 +281,7 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   print("info");
                   isInfo = true;
 
-                  showDialogInfo(context);
+                  showDialogInfo(context, widget.imgData);
                 } else if (widget.actionIndex == 1) {
                   print("save");
 
@@ -190,11 +289,17 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   if (Platform.isAndroid) {
                     print("Android");
 
-                    Uint8List _data = await getData(
-                        "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
+                    print("url image: ${widget.imgURL}");
 
-                    File file = new File(
-                        "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
+                    // Uint8List _data = await getData(
+                    //     "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
+                    Uint8List _data = await getData(widget.imgURL);
+
+                    // File file = new File(
+                    //     "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
+
+                    File file = new File(widget.imgURL);
+
                     String basenameImg = basename(file.path);
 
                     print("basename: $basenameImg");
@@ -223,9 +328,12 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   print("apply");
                   isApply = true;
 
+                  print("imgURL ${widget.imgURL}");
+
                   if (Platform.isAndroid) {
-                    showMyDialogSetWallpaper(context,
-                        "https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?size=626&ext=jpg");
+                    // showMyDialogSetWallpaper(context,
+                    //     "https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?size=626&ext=jpg");
+                    showMyDialogSetWallpaper(context, widget.imgURL);
                   }
 
                   if (Platform.isIOS) {
@@ -245,38 +353,17 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   });
                 }
               },
-              // child: SvgPicture.asset(
-              //   widget.iconURL,
-              //   color: isFavorite ? Colors.red : Colors.black,
-              //   width: 35,
-              //   height: 35,
-              // ),
-
               child: Icon(
                 widget.iconURL,
                 color: isFavorite ? Colors.red : Colors.white,
                 size: 35,
               ),
               style: TextButton.styleFrom(
-                  // padding: EdgeInsets.all(10.0),
-                  // backgroundColor:
-                  //     // Color(0xFFDBD8D5).withOpacity(0.25),
                   shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(7.5),
-                // side: BorderSide(
-                //     color: Color(0xFFDBD8D5)
-                //         .withOpacity(0.25)),
               )),
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.all(5.0),
-          //   child: Text(
-          //     widget.iconText,
-          //     style:
-          //         TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          //   ),
-          // )
         ],
       ),
     );
@@ -316,7 +403,7 @@ class MySnackBarSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomSnackBar.success(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black54,
       message: messageText,
       textStyle: TextStyle(
         color: Colors.white,

@@ -26,7 +26,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
      // CategoryData();
     // getCategoryData()
    // final categoryData =  CategoryService.getCategoryData();
-    test();
+   //  test();
+    getData();
   }
 
   void CategoryData() async {
@@ -49,13 +50,40 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // final data = await CategoryService.getCategoryData();
 
     var categoryData = await CategoryService.getCategoryData();
-    // print('in loading screen ${data}');
+    print('in loading screen ${categoryData}');
 
     // debugPrint("categoryData in debug $categoryData", wrapWidth: 1024);
 
     Navigator.pushReplacementNamed(context, '/home', arguments: {
-      'categoryData': categoryData
+      'categoryData2': categoryData
     });
+
+  }
+
+  Future<void> getData() async {
+    // print("before await test");
+    // final data = await CategoryService.getCategoryData();
+
+    print("start in loading screen ${DateTime.now()}");
+
+
+    try{
+      var categoryData = await CategoryService.getCategoryDataNew();
+      // print('in loading screen ${categoryData}');
+
+      print("end in loading screen ${DateTime.now()}");
+
+
+      // debugPrint("categoryData in debug loading $categoryData", wrapWidth: 1024);
+
+      Navigator.pushReplacementNamed(context, '/home', arguments: {
+        'categoryData': categoryData
+      });
+    }catch (err){
+      throw Exception("error in loading screen $err");
+    }
+
+
 
   }
 

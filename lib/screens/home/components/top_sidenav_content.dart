@@ -1,5 +1,6 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpaper_app/main.dart';
+import 'package:wallpaper_app/screens/home/components/dialog_notification.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class TopSidenavContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           IconButton(
+            onPressed: null,
             iconSize: 50.0,
             icon: SvgPicture.asset(
               'assets/icons/crown.svg',
@@ -39,6 +41,7 @@ class TopSidenavContent extends StatelessWidget {
             child: TextButton(
               onPressed: () {
                 print('user click get premium');
+                 showDialogNotifcation(context);
               },
               child: Text(
                 "Get Premium".toUpperCase(),

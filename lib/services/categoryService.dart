@@ -11,6 +11,13 @@ class CategoryService {
   static String apiChosenCategoryURL = 'https://mkt.h2c.us/api/v1/wallpaper/query?cid=$_categoryID&page=$_pageNumber';
   static String apiFirstPageCategoryURL = 'https://mkt.h2c.us/api/v1/wallpaper/query?cid=$_categoryID&page=1';
 
+  var headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Accept': "*/*",
+    'connection': 'keep-alive',
+    'Accept-Encoding' : 'gzip, deflate, br',
+  };
+
   static getCategoryData() async {
     print("running");
     final response = await http.get(Uri.parse(apiURL));
@@ -50,7 +57,7 @@ class CategoryService {
 
   // new API , have key wallpapers with 5 items here.
 
-  static getImagesInCategory() async {
+  static getCategoryDataNew() async {
    final response =  await http.get(Uri.parse("https://mkt.h2c.us/api/v1/wallpaper/home"));
    if(response.statusCode == 200){
      var bodyDecode = jsonDecode(response.body);
