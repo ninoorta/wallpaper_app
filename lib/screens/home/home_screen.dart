@@ -61,23 +61,27 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, "/account");
-                },
-                child: SvgPicture.asset(
-                  "assets/icons/account/aboutUs.svg",
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            )
-          ],
-        ),
+
+        // later func
+        // title: Row(
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   children: [
+        //     Container(
+        //       child: GestureDetector(
+        //         onTap: () {
+        //           Navigator.pushNamed(context, "/account");
+        //         },
+        //         child: SvgPicture.asset(
+        //           "assets/icons/account/aboutUs.svg",
+        //           width: 30,
+        //           height: 30,
+        //         ),
+        //       ),
+        //     )
+        //   ],
+        // ),
+        // later
+
       ),
       drawer: SafeArea(
         child: ClipRRect(

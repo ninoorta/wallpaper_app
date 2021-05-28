@@ -37,7 +37,9 @@ class _HomeBodyState extends State<HomeBody> {
 
     return Column(
       children: <Widget>[
-        SearchBar(size: size),
+        // later func
+        // SearchBar(size: size),
+        // later
         MyCustomCarousel(categoryData: _categoryData),
       ],
     );

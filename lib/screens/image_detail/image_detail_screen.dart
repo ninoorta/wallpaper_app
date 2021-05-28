@@ -59,11 +59,15 @@ class _ImageDetailState extends State<ImageDetail> {
 
     return SafeArea(
       child: Scaffold(
-          body: Listener(
-        onPointerMove: (moveEvent) {
-          if (moveEvent.delta.dx > 0) {
-            print("swipe right");
+          body: GestureDetector(
+        onHorizontalDragUpdate: (details) {
+          int sensitivity = 8;
+          if (details.delta.dx > sensitivity) {
+            // Right Swipe
             Navigator.pop(context);
+          } else if (details.delta.dx < -sensitivity) {
+            //Left Swipe
+            // Navigator.pop(context);
           }
         },
         child: BuildImageDetail(

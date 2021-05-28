@@ -34,7 +34,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
         currentPage = currentPage + 1;
         try {
           var newData = await CategoryService.loadMoreCategoryData(
-              currentCategoryID, currentPage, 6);
+              currentCategoryID, currentPage, 5);
 
           // print("new data $newData");
           // print("current page $currentPage");
@@ -52,6 +52,27 @@ class _CategoryDetailState extends State<CategoryDetail> {
         }
       }
     });
+  }
+
+  void loadDataWhenFirstOpen() async {
+    currentPage = currentPage + 1;
+    try {
+      EasyLoading.show(status: "Loading...");
+      var newData = await CategoryService.loadMoreCategoryData(
+          currentCategoryID, currentPage, 5);
+      EasyLoading.dismiss();
+
+      setState(() {
+        _imagesInCategory = _imagesInCategory + newData;
+        // print("new images data $_imagesInCategory");
+        // print("current length ${_imagesInCategory.length}");
+        first = false;
+      });
+    } catch (err) {
+      print("error when loadDataWhenFirstOpen: $err");
+      EasyLoading.dismiss();
+      EasyLoading.showToast("Please try again");
+    }
   }
 
   @override
@@ -81,6 +102,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
     if (first) {
       currentPage = dataInArguments["pageNumber"];
       _imagesInCategory = dataInArguments["data"];
+
+      loadDataWhenFirstOpen();
+
     }
 
     // debugPrint("\n images in category detail screen $_imagesInCategory",
