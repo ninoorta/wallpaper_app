@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="wallpaper_app_.gemmob">
+    package="com.minigame.wallpaper_app">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:requestLegacyExternalStorage="true"
-        android:label="wallpaper_gemmob"
+        android:label="wallpapers"
         android:icon="@mipmap/ic_launcher"
       >
 
