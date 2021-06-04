@@ -96,7 +96,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
   Widget build(BuildContext context) {
     EasyLoading.dismiss();
 
-    dataInArguments = ModalRoute.of(context).settings.arguments;
+    dataInArguments = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
     currentCategoryID = dataInArguments["categoryID"];
     // debugPrint("in category detail screen $dataInArguments", wrapWidth: 1024);
     if (first) {
@@ -104,7 +107,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
       _imagesInCategory = dataInArguments["data"];
 
       loadDataWhenFirstOpen();
-
     }
 
     // debugPrint("\n images in category detail screen $_imagesInCategory",
@@ -143,12 +145,13 @@ class _CategoryDetailState extends State<CategoryDetail> {
               itemCount: _imagesInCategory.length,
               itemBuilder: (BuildContext context, int index) {
                 return GridViewItem(
-                  imageID: _imagesInCategory[index]["id"],
-                  imageURL: _imagesInCategory[index]["url"],
-                  imageData: _imagesInCategory[index],
-                  imagesInCategory: _imagesInCategory,
-                  currentIndex: index,
-                  currentCategoryID: currentCategoryID,
+                    imageID: _imagesInCategory[index]["id"],
+                    imageURL: _imagesInCategory[index]["url"],
+                    imageData: _imagesInCategory[index],
+                    imagesInCategory: _imagesInCategory,
+                    currentIndex: index,
+                    currentCategoryID: currentCategoryID,
+                    currentPage: currentPage
                 );
               }),
         ));
@@ -162,14 +165,14 @@ class GridViewItem extends StatelessWidget {
   final List imagesInCategory;
   final int currentIndex;
   final int currentCategoryID;
+  final int currentPage;
 
-  GridViewItem(
-      {this.imageID,
-      this.imageURL,
-      this.imageData,
-      this.imagesInCategory,
-      this.currentIndex,
-      this.currentCategoryID});
+  GridViewItem({this.imageID,
+    this.imageURL,
+    this.imageData,
+    this.imagesInCategory,
+    this.currentIndex,
+    this.currentCategoryID, this.currentPage});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +188,8 @@ class GridViewItem extends StatelessWidget {
             "chosenImageData": this.imageData,
             "imagesInCategory": imagesInCategory,
             "currentIndex": currentIndex,
-            "currentCategoryID": currentCategoryID
+            "currentCategoryID": currentCategoryID,
+            "currentPage": currentPage
           });
           // EasyLoading.dismiss();
         },

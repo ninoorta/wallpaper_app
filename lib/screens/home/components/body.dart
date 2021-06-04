@@ -81,7 +81,6 @@ class _MyCustomCarouselState extends State<MyCustomCarousel> {
             itemCount: _categoryData.length,
             itemBuilder: (context, index) {
               var currentCategory = _categoryData[index];
-              // print("wallpaper $index ${currentCategory["wallpaper"]}");
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -90,7 +89,6 @@ class _MyCustomCarouselState extends State<MyCustomCarousel> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // textBaseline: TextBaseline.alphabetic,
                       children: [
                         AutoSizeText(
                           currentCategory["name"],
@@ -99,18 +97,8 @@ class _MyCustomCarouselState extends State<MyCustomCarousel> {
                           overflow: TextOverflow.ellipsis,
                           minFontSize: 20,
                         ),
-                        // Text(currentCategory["name"], style: kLabelTextStyle),
                         TextButton(
                           onPressed: () async {
-                            // show loading
-                            EasyLoading.instance.radius = 15;
-                            // EasyLoading.show(
-                            //     status: "Please wait...", dismissOnTap: false);
-                            // var imagesData =
-                            //     await CategoryService.getChosenCategoryData(
-                            //         currentCategory["id"], 1);
-                            // // close loading
-                            // EasyLoading.dismiss();
                             Navigator.pushNamed(context, "/category",
                                 arguments: {
                                   "categoryID": currentCategory["id"],
@@ -174,7 +162,6 @@ class _BuildImagesCarouselState extends State<BuildImagesCarousel> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // print("build carousel data received ${widget.currentCategoryImagesData}");
   }
 
   Map arguments;
@@ -197,7 +184,8 @@ class _BuildImagesCarouselState extends State<BuildImagesCarousel> {
                   "chosenImageData": _imagesDataInThisCategory[index],
                   "imagesInCategory": _imagesDataInThisCategory,
                   "currentIndex": index,
-                  "currentCategoryID": widget.currentCategoryID
+                  "currentCategoryID": widget.currentCategoryID,
+                  "currentPage": 1
                 });
               },
               padding: EdgeInsets.zero,

@@ -102,43 +102,43 @@ Future<void> showMyDialogSetWallpaper(BuildContext context, imgURL) async {
                 ),
 
                 // later : now can only good apply for home screen, lockscreen can not set
-                // ElevatedButton(
-                //   child: Text(
-                //     'Both',
-                //     style: kDialogTextButtonStyle,
-                //   ),
-                //   onPressed: () async {
-                //     print("User chose both screens");
-                //
-                //     // String assetPath = imgURL;
-                //     int location = WallpaperManager.BOTH_SCREENS;
-                //     // final String result =
-                //     //     await WallpaperManager.setWallpaperFromAsset(
-                //     //         assetPath, location);
-                //     var file =
-                //         await DefaultCacheManager().getSingleFile(imgURL);
-                //
-                //     final String result =
-                //         await WallpaperManager.setWallpaperFromFile(
-                //             file.path, location);
-                //
-                //     print('set wallpaper both  result: $result');
-                //
-                //
-                //     Navigator.of(context).pop();
-                //
-                //     showTopSnackBar(
-                //         context,
-                //         MySnackBarSuccess(
-                //           messageText: "Set both screens successfully!",
-                //         ),
-                //         displayDuration: Duration(milliseconds: 1000));
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //       primary: Colors.white,
-                //       textStyle: kDialogTextButtonStyle,
-                //       elevation: 2),
-                // ),
+                ElevatedButton(
+                  child: Text(
+                    'Both',
+                    style: kDialogTextButtonStyle,
+                  ),
+                  onPressed: () async {
+                    print("User chose both screens");
+
+                    // String assetPath = imgURL;
+                    int location = WallpaperManager.BOTH_SCREENS;
+                    // final String result =
+                    //     await WallpaperManager.setWallpaperFromAsset(
+                    //         assetPath, location);
+                    var file =
+                        await DefaultCacheManager().getSingleFile(imgURL);
+
+                    final String result =
+                        await WallpaperManager.setWallpaperFromFile(
+                            file.path, location);
+
+                    print('set wallpaper both  result: $result');
+
+                    // xiaomi + huawei fail
+                    Navigator.of(context).pop();
+
+                    showTopSnackBar(
+                        context,
+                        MySnackBarSuccess(
+                          messageText: "Set both screens successfully!",
+                        ),
+                        displayDuration: Duration(milliseconds: 1000));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      textStyle: kDialogTextButtonStyle,
+                      elevation: 2),
+                ),
                 // later
 
               ],

@@ -215,7 +215,7 @@ class CategoryItem extends StatelessWidget {
                   width: 10,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  width: MediaQuery.of(context).size.width * 0.45,
                   child: Text(
                     categoryName,
                     style: TextStyle(

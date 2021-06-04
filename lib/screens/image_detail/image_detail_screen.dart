@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:wallpaper_app/services/categoryService.dart';
 import 'package:wallpaper_app/utilities/constants.dart';
 
 // components
@@ -27,6 +28,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/tap_bounce_container.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
+bool isDarkMode = false;
+
 class ImageDetail extends StatefulWidget {
   @override
   _ImageDetailState createState() => _ImageDetailState();
@@ -38,93 +41,85 @@ class _ImageDetailState extends State<ImageDetail> {
   List<dynamic> imagesInCategory;
   int initialImageID;
   int initialImageIndex;
+  int currentPage;
+  int currentCategoryID;
+  bool first = true;
+
+  List<Widget> renderAllImagesWidget(List<dynamic> imagesData, size) {
+    List<Widget> listImagesWidgets = [];
+
+    for (Map imageData in imagesData) {
+      var newWidget = BuildImageDetail(size: size, imageData: imageData);
+
+      listImagesWidgets.add(newWidget);
+    }
+
+    return listImagesWidgets;
+  }
+
+  void loadMoreData() async {
+    // EasyLoading.show(status: "Loading...");
+
+    currentPage = currentPage + 1;
+    try {
+      var newData = await CategoryService.loadMoreCategoryData(
+          currentCategoryID, currentPage, 5);
+      // EasyLoading.dismiss();
+      setState(() {
+        imagesInCategory = imagesInCategory + newData;
+        first = false;
+      });
+    } catch (err) {
+      print("error when loadMoreCategoryData: $err");
+      EasyLoading.dismiss();
+      EasyLoading.showToast("Please try again");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    arguments = ModalRoute.of(context).settings.arguments;
-
     Size size = MediaQuery.of(context).size;
 
-    print("arguments in imageDetail screen $arguments");
+    if (first) {
+      arguments = ModalRoute.of(context).settings.arguments;
 
-    imageData = arguments["chosenImageData"];
-    imagesInCategory = arguments["imagesInCategory"];
-    initialImageID = imageData["id"];
-    initialImageIndex = arguments["currentIndex"];
+      print("arguments in imageDetail screen $arguments");
+      imageData = arguments["chosenImageData"];
+      imagesInCategory = arguments["imagesInCategory"];
+      initialImageID = imageData["id"];
+      initialImageIndex = arguments["currentIndex"];
+      currentPage = arguments["currentPage"];
+      currentCategoryID = arguments["currentCategoryID"];
 
-    print("chosen image data $imageData");
+      print("chosen image data $imageData");
+
+      first = false;
+    }
 
     final PageController _controller = PageController(
         initialPage: initialImageIndex, keepPage: true, viewportFraction: 1);
 
     return SafeArea(
       child: Scaffold(
-          body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          int sensitivity = 8;
-          if (details.delta.dx > sensitivity) {
-            // Right Swipe
-            Navigator.pop(context);
-          } else if (details.delta.dx < -sensitivity) {
-            //Left Swipe
-            // Navigator.pop(context);
+          body: PageView(
+        controller: _controller,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (index) {
+          print("changed to $index");
+          if (index == imagesInCategory.length - 2) {
+            print("last");
+            loadMoreData();
+          } else if (index == 0) {
+            print("oh first one");
           }
         },
-        child: BuildImageDetail(
-          size: size,
-          imageData: imageData,
-        ),
-      )
-
-          // later
-          //     body: PageView(
-          //         controller: _controller,
-          //         scrollDirection: Axis.horizontal,
-          //         onPageChanged: (index) {
-          //           print("changed to $index");
-          //         },
-          //         children: [
-          //           Row(
-          //             children: [
-          //               Container(
-          //                 width: size.width,
-          //                 child: ListView.builder(
-          //                   controller: ScrollController(
-          //                   ),
-          //                   scrollDirection: Axis.horizontal,
-          //                   shrinkWrap: true,
-          //                   // physics: NeverScrollableScrollPhysics(),
-          //                   itemCount: imagesInCategory.length,
-          //                   itemBuilder: (context, index) {
-          //                     return BuildImageDetail(
-          //                         size: size, imageData: imagesInCategory[index]);
-          //                   },
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          // ])
-
-          // later
-
-          ),
-
-      // child: PageView(
-      //     scrollDirection: Axis.horizontal,
-      //     controller: _controller,
-      //     children: <Widget>[
-      //       ListView.builder(
-      //         itemCount: imagesInCategory.length,
-      //         itemBuilder: (context, index) {
-      //           return BuildImageDetail(size: size, imageData: imagesInCategory[index]);
-      //         },
-      //       ),
-      //     ]),
+        children: renderAllImagesWidget(imagesInCategory, size),
+      )),
     );
   }
 }
 
-class BuildImageDetail extends StatelessWidget {
+class BuildImageDetail extends StatefulWidget {
   const BuildImageDetail({
     Key key,
     @required this.size,
@@ -135,14 +130,19 @@ class BuildImageDetail extends StatelessWidget {
   final Map imageData;
 
   @override
+  _BuildImageDetailState createState() => _BuildImageDetailState();
+}
+
+class _BuildImageDetailState extends State<BuildImageDetail> {
+  @override
   Widget build(BuildContext context) {
-    print("device width ${size.width}");
-    print("device height ${size.height}");
+    // print("device width ${size.width}");
+    // print("device height ${size.height}");
     return Stack(
       children: <Widget>[
         Container(
-          height: size.height,
-          width: size.width,
+          height: widget.size.height,
+          width: widget.size.width,
           decoration: BoxDecoration(
             color: Colors.transparent,
           ),
@@ -154,36 +154,73 @@ class BuildImageDetail extends StatelessWidget {
           ),
         ),
         Container(
-          width: size.width,
-          height: size.height,
+          width: widget.size.width,
+          height: widget.size.height,
           child: FadeInImage.memoryNetwork(
             placeholder: kTransparentImage,
-            image: "https://mkt.h2c.us/wall/photo/${imageData["url"]}",
+            image: "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}",
             fit: BoxFit.cover,
           ),
         ),
         Container(
-          width: size.width,
+          width: widget.size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               // container for back button
-              Container(
-                width: size.width,
-                margin: EdgeInsets.all(15.0),
-                alignment: Alignment.topLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.0),
-                      color: Colors.grey[200]),
-                  child: BackButton(
-                    color: Colors.black,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: Colors.transparent),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        color: isDarkMode ? Colors.black : Colors.white,
+                        iconSize: 35,
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    // width: size.width,
+                    // margin: EdgeInsets.all(15.0),
+                    margin: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: Colors.black.withOpacity(0.5)),
+                      child: IconButton(
+                        iconSize: 30,
+                        padding: EdgeInsets.zero,
+                        color: Colors.white,
+                        onPressed: () {
+                          //  change mode now
+                          setState(() {
+                            isDarkMode = !isDarkMode;
+                            print("darkmode? $isDarkMode");
+                          });
+                        },
+                        icon: Icon(isDarkMode
+                            ? Icons.dark_mode_rounded
+                            : Icons.light_mode_rounded),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -192,20 +229,20 @@ class BuildImageDetail extends StatelessWidget {
                     iconURL: Icons.info_outline_rounded,
                     iconText: "Info",
                     actionIndex: 0,
-                    imgData: imageData,
+                    imgData: widget.imageData,
                   ),
                   ImageDetailButton(
                       iconURL: Icons.save_alt_rounded,
                       iconText: "Save",
                       actionIndex: 1,
                       imgURL:
-                          "https://mkt.h2c.us/wall/photo/${imageData["url"]}"),
+                          "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
                   ImageDetailButton(
                       iconURL: Icons.brush_rounded,
                       iconText: "Apply",
                       actionIndex: 2,
                       imgURL:
-                          "https://mkt.h2c.us/wall/photo/${imageData["url"]}"),
+                          "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
                   // ImageDetailButton( later feature
                   //   iconURL: Icons.favorite_border_rounded,
                   //   iconText: "Favorite",
@@ -260,26 +297,20 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 0, 0, 20),
-      padding: EdgeInsets.all(5.0),
+      margin: EdgeInsets.fromLTRB(15, 0, 15, 30),
+      // padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
-              color: Color(0xFFC1BBB6).withOpacity(0.65),
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: Offset(0, 0),
-                )
-              ],
-            ),
             width: 50.0,
             height: 50.0,
-            child: TextButton(
+            decoration: BoxDecoration(
+                // color: isDarkMode? Colors.grey[350].withOpacity(0.35) : Colors.white.withOpacity(0.05),
+                color: Colors.grey[350].withOpacity(0.35),
+                borderRadius: BorderRadius.circular(10)),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+
               onPressed: () async {
                 if (widget.actionIndex == 0) {
                   print("info");
@@ -357,15 +388,20 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   });
                 }
               },
-              child: Icon(
+
+              icon: Icon(
                 widget.iconURL,
-                color: isFavorite ? Colors.red : Colors.white,
-                size: 35,
+                color: isFavorite
+                    ? Colors.red
+                    : isDarkMode
+                        ? Colors.black
+                        : Colors.white,
+                size: 40,
               ),
-              style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.5),
-              )),
+              // style: TextButton.styleFrom(
+              //     shape: RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.circular(7.5),
+              // )),
             ),
           ),
         ],
@@ -417,7 +453,3 @@ class MySnackBarSuccess extends StatelessWidget {
     );
   }
 }
-
-
-
-
