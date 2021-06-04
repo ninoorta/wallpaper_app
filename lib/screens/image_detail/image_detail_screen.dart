@@ -177,7 +177,7 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
         Container(
           width: widget.size.width,
           margin: EdgeInsets.only(
-              left: 10.0, top: Platform.isIOS ? 50.0 : 10, right: 10.0),
+              left: 10.0, top: Platform.isIOS ? 50.0 : 25, right: 10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -236,9 +236,8 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Platform.isAndroid
-                      ? [
+                children:
+                  Platform.isAndroid? [
                           ImageDetailButton(
                             iconURL: Icons.info_outline_rounded,
                             iconText: "Info",
@@ -291,7 +290,7 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                   //   iconText: "Favorite",
                   //   actionIndex: 3,
                   // ),
-                ],
+
               ),
             ],
           ),
@@ -340,7 +339,7 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(15, 0, 15, Platform.isIOS ? 50 : 0),
+      margin: EdgeInsets.fromLTRB(15, 0, 15, Platform.isIOS ? 50 : 30),
       // padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
