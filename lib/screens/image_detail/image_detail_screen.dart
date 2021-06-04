@@ -46,9 +46,14 @@ class _ImageDetailState extends State<ImageDetail> {
   List<Widget> renderAllImagesWidget(List<dynamic> imagesData, size) {
     List<Widget> listImagesWidgets = [];
 
-    for (int index = 0 ; index < imagesData.length; index++) {
+    for (int index = 0; index < imagesData.length; index++) {
       imageData = imagesData[index];
-      var newWidget = BuildImageDetail(size: size, imageData: imageData, currentIndex: index, imagesLength: imagesData.length,);
+      var newWidget = BuildImageDetail(
+        size: size,
+        imageData: imageData,
+        currentIndex: index,
+        imagesLength: imagesData.length,
+      );
 
       listImagesWidgets.add(newWidget);
     }
@@ -67,7 +72,6 @@ class _ImageDetailState extends State<ImageDetail> {
       setState(() {
         imagesInCategory = imagesInCategory + newData;
         first = false;
-
       });
     } catch (err) {
       print("error when loadMoreCategoryData: $err");
@@ -128,13 +132,13 @@ class _ImageDetailState extends State<ImageDetail> {
 }
 
 class BuildImageDetail extends StatefulWidget {
-   BuildImageDetail({
-    Key key,
-    @required this.size,
-    @required this.imageData,
-    this.currentIndex,
-    this.imagesLength
-  }) : super(key: key);
+  BuildImageDetail(
+      {Key key,
+      @required this.size,
+      @required this.imageData,
+      this.currentIndex,
+      this.imagesLength})
+      : super(key: key);
 
   final Size size;
   final Map imageData;
@@ -198,7 +202,9 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                         padding: EdgeInsets.zero,
                         color: isDarkMode ? Colors.black : Colors.white,
                         iconSize: 35,
-                        icon: Icon(Platform.isIOS? CupertinoIcons.back : Icons.arrow_back),
+                        icon: Icon(Platform.isIOS
+                            ? CupertinoIcons.back
+                            : Icons.arrow_back),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -207,7 +213,10 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                   ),
                   Text(
                     "${widget.currentIndex + 1} of ${widget.imagesLength}",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: isDarkMode? Colors.black : Colors.white),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: isDarkMode ? Colors.black : Colors.white),
                   ),
                   Container(
                     alignment: Alignment.topRight,
@@ -235,9 +244,15 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                 ],
               ),
               Row(
+<<<<<<< HEAD
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:
                   Platform.isAndroid? [
+=======
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: Platform.isAndroid
+                      ? [
+>>>>>>> 695eff68596bc9823f04d7e03d61771d3d98dc56
                           ImageDetailButton(
                             iconURL: Icons.info_outline_rounded,
                             iconText: "Info",
@@ -257,12 +272,14 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                               imgURL:
                                   "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
                         ]
-                      : ImageDetailButton(
-                          iconURL: Icons.save_alt_rounded,
-                          iconText: "Save",
-                          actionIndex: 1,
-                          imgURL:
-                              "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+                      : [
+                          ImageDetailButton(
+                              iconURL: Icons.save_alt_rounded,
+                              iconText: "Save",
+                              actionIndex: 1,
+                              imgURL:
+                                  "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+                        ]
 
                   // ImageDetailButton(
                   //   iconURL: Icons.info_outline_rounded,
@@ -291,7 +308,11 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                   //   actionIndex: 3,
                   // ),
 
+<<<<<<< HEAD
               ),
+=======
+                  ),
+>>>>>>> 695eff68596bc9823f04d7e03d61771d3d98dc56
             ],
           ),
         ),
