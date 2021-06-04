@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -84,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       ),
       drawer: SafeArea(
+        bottom: Platform.isIOS? false : true,
         child: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(15), bottomRight: Radius.circular(15)),

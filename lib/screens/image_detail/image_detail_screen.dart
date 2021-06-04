@@ -5,13 +5,11 @@ import 'package:path/path.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:wallpaper_app/services/categoryService.dart';
-import 'package:wallpaper_app/utilities/constants.dart';
 
 // components
 import 'components/dialog_set_wallpaper.dart';
@@ -25,7 +23,6 @@ import 'dart:io';
 
 // top snackBar
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/tap_bounce_container.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool isDarkMode = false;
@@ -43,13 +40,15 @@ class _ImageDetailState extends State<ImageDetail> {
   int initialImageIndex;
   int currentPage;
   int currentCategoryID;
+  int currentIndex;
   bool first = true;
 
   List<Widget> renderAllImagesWidget(List<dynamic> imagesData, size) {
     List<Widget> listImagesWidgets = [];
 
-    for (Map imageData in imagesData) {
-      var newWidget = BuildImageDetail(size: size, imageData: imageData);
+    for (int index = 0 ; index < imagesData.length; index++) {
+      imageData = imagesData[index];
+      var newWidget = BuildImageDetail(size: size, imageData: imageData, currentIndex: index, imagesLength: imagesData.length,);
 
       listImagesWidgets.add(newWidget);
     }
@@ -68,6 +67,7 @@ class _ImageDetailState extends State<ImageDetail> {
       setState(() {
         imagesInCategory = imagesInCategory + newData;
         first = false;
+
       });
     } catch (err) {
       print("error when loadMoreCategoryData: $err");
@@ -90,22 +90,30 @@ class _ImageDetailState extends State<ImageDetail> {
       initialImageIndex = arguments["currentIndex"];
       currentPage = arguments["currentPage"];
       currentCategoryID = arguments["currentCategoryID"];
+      currentIndex = arguments["currentIndex"];
 
       print("chosen image data $imageData");
 
       first = false;
+
+      if (initialImageIndex == imagesInCategory.length - 1) {
+        loadMoreData();
+      }
     }
 
     final PageController _controller = PageController(
         initialPage: initialImageIndex, keepPage: true, viewportFraction: 1);
 
     return SafeArea(
+      top: false,
+      bottom: Platform.isIOS ? false : true,
       child: Scaffold(
           body: PageView(
         controller: _controller,
         scrollDirection: Axis.horizontal,
         onPageChanged: (index) {
           print("changed to $index");
+          currentIndex = currentIndex + 1;
           if (index == imagesInCategory.length - 2) {
             print("last");
             loadMoreData();
@@ -120,14 +128,18 @@ class _ImageDetailState extends State<ImageDetail> {
 }
 
 class BuildImageDetail extends StatefulWidget {
-  const BuildImageDetail({
+   BuildImageDetail({
     Key key,
     @required this.size,
     @required this.imageData,
+    this.currentIndex,
+    this.imagesLength
   }) : super(key: key);
 
   final Size size;
   final Map imageData;
+  int currentIndex;
+  int imagesLength;
 
   @override
   _BuildImageDetailState createState() => _BuildImageDetailState();
@@ -164,6 +176,8 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
         ),
         Container(
           width: widget.size.width,
+          margin: EdgeInsets.only(
+              left: 10.0, top: Platform.isIOS ? 50.0 : 10, right: 10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -173,7 +187,6 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
                     alignment: Alignment.topLeft,
                     child: Container(
                       width: 50,
@@ -192,10 +205,11 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                       ),
                     ),
                   ),
+                  Text(
+                    "${widget.currentIndex + 1} of ${widget.imagesLength}",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: isDarkMode? Colors.black : Colors.white),
+                  ),
                   Container(
-                    // width: size.width,
-                    // margin: EdgeInsets.all(15.0),
-                    margin: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
                     alignment: Alignment.topRight,
                     child: Container(
                       width: 50,
@@ -225,24 +239,55 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ImageDetailButton(
-                    iconURL: Icons.info_outline_rounded,
-                    iconText: "Info",
-                    actionIndex: 0,
-                    imgData: widget.imageData,
-                  ),
-                  ImageDetailButton(
-                      iconURL: Icons.save_alt_rounded,
-                      iconText: "Save",
-                      actionIndex: 1,
-                      imgURL:
-                          "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
-                  ImageDetailButton(
-                      iconURL: Icons.brush_rounded,
-                      iconText: "Apply",
-                      actionIndex: 2,
-                      imgURL:
-                          "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+                  Platform.isAndroid
+                      ? [
+                          ImageDetailButton(
+                            iconURL: Icons.info_outline_rounded,
+                            iconText: "Info",
+                            actionIndex: 0,
+                            imgData: widget.imageData,
+                          ),
+                          ImageDetailButton(
+                              iconURL: Icons.save_alt_rounded,
+                              iconText: "Save",
+                              actionIndex: 1,
+                              imgURL:
+                                  "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+                          ImageDetailButton(
+                              iconURL: Icons.brush_rounded,
+                              iconText: "Apply",
+                              actionIndex: 2,
+                              imgURL:
+                                  "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+                        ]
+                      : ImageDetailButton(
+                          iconURL: Icons.save_alt_rounded,
+                          iconText: "Save",
+                          actionIndex: 1,
+                          imgURL:
+                              "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
+
+                  // ImageDetailButton(
+                  //   iconURL: Icons.info_outline_rounded,
+                  //   iconText: "Info",
+                  //   actionIndex: 0,
+                  //   imgData: widget.imageData,
+                  // ),
+                  // ImageDetailButton(
+                  //     iconURL: Icons.save_alt_rounded,
+                  //     iconText: "Save",
+                  //     actionIndex: 1,
+                  //     imgURL:
+                  //         "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"
+                  // ),
+                  // ImageDetailButton(
+                  //     iconURL: Icons.brush_rounded,
+                  //     iconText: "Apply",
+                  //     actionIndex: 2,
+                  //     imgURL:
+                  //         "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"
+                  // ),
+
                   // ImageDetailButton( later feature
                   //   iconURL: Icons.favorite_border_rounded,
                   //   iconText: "Favorite",
@@ -297,7 +342,7 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(15, 0, 15, 30),
+      margin: EdgeInsets.fromLTRB(15, 0, 15, Platform.isIOS ? 50 : 0),
       // padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
@@ -326,6 +371,9 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
 
                     print("url image: ${widget.imgURL}");
 
+                    EasyLoading.instance.userInteractions = false;
+                    EasyLoading.show(status: "Loading...");
+
                     // Uint8List _data = await getData(
                     //     "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
                     Uint8List _data = await getData(widget.imgURL);
@@ -346,6 +394,7 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                     bool success = await ImageSave.saveImage(_data, basenameImg,
                         albumName: "WallpapersByGemmob");
 
+                    EasyLoading.dismiss();
                     print("result: $success");
 
                     showTopSnackBar(
@@ -356,7 +405,21 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                         displayDuration: Duration(milliseconds: 1000));
                   }
                   if (Platform.isIOS) {
-                    print("IOS ");
+                    EasyLoading.instance.userInteractions = false;
+
+                    EasyLoading.show(status: "Loading...");
+
+                    await _save(widget.imgURL);
+                    EasyLoading.dismiss();
+
+                    print("IOS saved finished");
+
+                    showTopSnackBar(
+                        context,
+                        MySnackBarSuccess(
+                          messageText: "Saved successfully!",
+                        ),
+                        displayDuration: Duration(milliseconds: 1000));
                   }
                   isSave = true;
                 } else if (widget.actionIndex == 2) {
@@ -409,19 +472,17 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
     );
   }
 
-  // _save() async {
-  //   if (Platform.isAndroid) {
-  //     await _askPermission();
-  //   }
-  //   var response = await Dio().get(
-  //       "https://i.pinimg.com/originals/3b/8a/d2/3b8ad2c7b1be2caf24321c852103598a.jpg",
-  //       options: Options(responseType: ResponseType.bytes));
-  //   final result = await ImageGallerySaver.saveImage(
-  //       Uint8List.fromList(response.data),
-  //       name: "custom2");
-  //   print(result);
-  //   // Navigator.pop(context);
-  // }
+  _save(String imgURL) async {
+    if (Platform.isAndroid) {
+      await _askPermission();
+    }
+    var response = await Dio()
+        .get(imgURL, options: Options(responseType: ResponseType.bytes));
+    final result =
+        await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+    print(result);
+    // Navigator.pop(context);
+  }
 
   _askPermission() async {
     if (Platform.isIOS) {
