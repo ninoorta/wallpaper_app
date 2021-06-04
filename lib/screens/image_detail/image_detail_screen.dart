@@ -113,9 +113,9 @@ class _ImageDetailState extends State<ImageDetail> {
         scrollDirection: Axis.horizontal,
         onPageChanged: (index) {
           print("changed to $index");
-          currentIndex = currentIndex + 1;
+          // currentIndex = currentIndex + 1;
           if (index == imagesInCategory.length - 2) {
-            print("last");
+            print("last - 1");
             loadMoreData();
           } else if (index == 0) {
             print("oh first one");
@@ -198,7 +198,7 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                         padding: EdgeInsets.zero,
                         color: isDarkMode ? Colors.black : Colors.white,
                         iconSize: 35,
-                        icon: Icon(Icons.arrow_back),
+                        icon: Icon(Platform.isIOS? CupertinoIcons.back : Icons.arrow_back),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -222,10 +222,8 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                         padding: EdgeInsets.zero,
                         color: Colors.white,
                         onPressed: () {
-                          //  change mode now
                           setState(() {
                             isDarkMode = !isDarkMode;
-                            print("darkmode? $isDarkMode");
                           });
                         },
                         icon: Icon(isDarkMode
