@@ -1,4 +1,4 @@
-package wallpaper_app_.gemmob
+package com.wallpaper_app
 
 import io.flutter.embedding.android.FlutterActivity
 
