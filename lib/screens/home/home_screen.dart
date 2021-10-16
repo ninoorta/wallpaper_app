@@ -2,24 +2,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpaper_app/models/categories/categories.dart';
 import './components/body.dart';
 import './components/sideNav.dart';
 
 class HomeScreen extends StatefulWidget {
-
   final categoryData;
 
   HomeScreen({this.categoryData});
-
-
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -30,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //   print("category catch in home screen ${this.categoryData}");
   //
   // }
-  Map dataInArguments = { };
+  Map dataInArguments = {};
   List categoryData = [];
   List categoryDataWithoutWalpaper;
 
@@ -82,15 +77,16 @@ class _HomeScreenState extends State<HomeScreen> {
         //   ],
         // ),
         // later
-
       ),
       drawer: SafeArea(
-        bottom: Platform.isIOS? false : true,
+        bottom: Platform.isIOS ? false : true,
         child: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
           child: Drawer(
-            child: SideNav(categoryData: categoryData,),
+            child: SideNav(
+              categoryData: categoryData,
+            ),
           ),
         ),
       ),

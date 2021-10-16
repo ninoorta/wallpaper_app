@@ -30,11 +30,11 @@ class FooterCopyright extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
-                        "Developed by",
+                        "Developed by ",
                         style: TextStyle(color: Colors.white, fontSize: 15.0),
                       ),
                       Text(
-                        "Gemmob",
+                        "Ninoorta",
                         style: kCopyrightTextStyle,
                       )
                     ],

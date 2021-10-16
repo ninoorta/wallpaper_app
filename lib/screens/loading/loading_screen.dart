@@ -37,9 +37,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       // debugPrint("categoryData in debug loading $categoryData", wrapWidth: 1024);
 
-      Navigator.pushReplacementNamed(context, '/home', arguments: {
-        'categoryData': categoryData
-      });
+      Navigator.pushReplacementNamed(context, '/home',
+          arguments: {'categoryData': categoryData});
     } catch (err) {
       throw Exception("error in loading screen $err");
     }
@@ -49,46 +48,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      // body: Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   crossAxisAlignment: CrossAxisAlignment.stretch,
-      //   children: [
-      //     Container(
-      //       // width: double.infinity,
-      //       child: Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         children: [
-      //           Image.asset(
-      //             "assets/images/gemmob_logo.png",
-      //             height: 100,
-      //             width: 100,
-      //           ),
-      //           // SizedBox(height: 100,),
-      //           SpinKitCircle(
-      //             color: Colors.white,
-      //             size: 65.0,
-      //           ),
-      //         ],
-      //       ),
-      //     )
-      //   ],
-      // ),
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
           Positioned.fill(
-            child: Align(
-              alignment: Alignment.center,
-              child: Image.asset(
-                "assets/images/gemmob_logo.png",
-                height: 150,
-                width: 150,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            top: 300,
+            top: 0,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: SpinKitCircle(
