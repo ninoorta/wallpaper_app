@@ -272,33 +272,6 @@ class _BuildImageDetailState extends State<BuildImageDetail> {
                         actionIndex: 1,
                         imgURL:
                             "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"),
-
-                // ImageDetailButton(
-                //   iconURL: Icons.info_outline_rounded,
-                //   iconText: "Info",
-                //   actionIndex: 0,
-                //   imgData: widget.imageData,
-                // ),
-                // ImageDetailButton(
-                //     iconURL: Icons.save_alt_rounded,
-                //     iconText: "Save",
-                //     actionIndex: 1,
-                //     imgURL:
-                //         "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"
-                // ),
-                // ImageDetailButton(
-                //     iconURL: Icons.brush_rounded,
-                //     iconText: "Apply",
-                //     actionIndex: 2,
-                //     imgURL:
-                //         "https://mkt.h2c.us/wall/photo/${widget.imageData["url"]}"
-                // ),
-
-                // ImageDetailButton( later feature
-                //   iconURL: Icons.favorite_border_rounded,
-                //   iconText: "Favorite",
-                //   actionIndex: 3,
-                // ),
               ),
             ],
           ),
@@ -360,7 +333,6 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                 borderRadius: BorderRadius.circular(10)),
             child: IconButton(
               padding: EdgeInsets.zero,
-
               onPressed: () async {
                 if (widget.actionIndex == 0) {
                   print("info");
@@ -379,12 +351,7 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                     EasyLoading.instance.userInteractions = false;
                     EasyLoading.show(status: "Loading...");
 
-                    // Uint8List _data = await getData(
-                    //     "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
                     Uint8List _data = await getData(widget.imgURL);
-
-                    // File file = new File(
-                    //     "https://i.pinimg.com/originals/f8/59/70/f85970920f913b58e5fcde0559b5879e.jpg");
 
                     File file = new File(widget.imgURL);
 
@@ -434,8 +401,6 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   print("imgURL ${widget.imgURL}");
 
                   if (Platform.isAndroid) {
-                    // showMyDialogSetWallpaper(context,
-                    //     "https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?size=626&ext=jpg");
                     showMyDialogSetWallpaper(context, widget.imgURL);
                   }
 
@@ -456,7 +421,6 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                   });
                 }
               },
-
               icon: Icon(
                 widget.iconURL,
                 color: isFavorite
@@ -466,10 +430,6 @@ class _ImageDetailButtonState extends State<ImageDetailButton> {
                         : Colors.white,
                 size: 40,
               ),
-              // style: TextButton.styleFrom(
-              //     shape: RoundedRectangleBorder(
-              //   borderRadius: BorderRadius.circular(7.5),
-              // )),
             ),
           ),
         ],
